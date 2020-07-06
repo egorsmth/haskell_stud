@@ -13,7 +13,7 @@ quadPolySolver a b c =
         d = b*b - 4 * a * c
         inner a b c
             | d < 0     = []
-            | d == 0    = [(-b + sqrt d) / (2 * a)]
+            | d == 0    = [-b / (2 * a)]
             | otherwise = [(-b + sqrt d) / (2 * a), (-b - sqrt d) / (2 * a)]
             
         
