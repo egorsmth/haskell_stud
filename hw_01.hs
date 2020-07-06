@@ -1,8 +1,12 @@
 lineSolver :: Float -> Float -> [Float]
-lineSolver b c = if b == 0 then [c] else [-c / b]
+lineSolver b c = 
+    if b == 0 
+    then [c] 
+    else [-c / b]
 
 quadPolySolver :: Float -> Float -> Float -> [Float]
-quadPolySolver a b c = if a == 0 
+quadPolySolver a b c = 
+    if a == 0 
     then lineSolver b c 
     else inner a b c
     where 
