@@ -17,5 +17,11 @@ mainLoop = do
       putStrLn $ show (quadPolySolver a b c)
       mainLoop
 
-main = mainLoop
+newTest = do
+    putStrLn $ show (quadPolySolver 1 2 1)
+    putStrLn $ show (quadPolySolver 1 5 1)
+    putStrLn $ show (quadPolySolver 0 0 1)
+    putStrLn $ show (quadPolySolver 0 0 0)
+
+main = newTest
 
