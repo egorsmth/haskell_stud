@@ -32,20 +32,9 @@ data Options = Options {a, b, c :: Double}
 
 parser :: Parser Options
 parser = Options
-  <$> option auto
-    ( long "arg a"
-    <> short 'a'
-    <> help "fiirst arg a"
-    )
-  <*> option auto
-    ( long "arg b"
-    <> short 'b'
-    <> help "second arg b"
-    )
-  <*> option auto
-    ( long "arg c"
-    <> short 'c'
-    <> help "third arg c")
+  <$> argument auto (metavar "a")
+  <*> argument auto (metavar "b")
+  <*> argument auto (metavar "c")
 
 parserInfo = 
   info
