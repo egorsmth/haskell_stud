@@ -1,6 +1,6 @@
 module QuadPolyTypes (SqEqAnswer(..)) where
 
-data SqEqAnswer = TwoRoots Float Float | OneRoot Float | NoRoots | InfRoots
+data SqEqAnswer = TwoRoots Double Double | OneRoot Double | NoRoots | InfRoots
   deriving (Eq)
 
 instance Show SqEqAnswer where

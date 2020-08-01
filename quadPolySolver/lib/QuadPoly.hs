@@ -2,13 +2,13 @@ module QuadPoly (quadPolySolver) where
 
 import QuadPolyTypes (SqEqAnswer(..))
 
-lineSolver :: Float -> Float -> SqEqAnswer
+lineSolver :: Double -> Double -> SqEqAnswer
 lineSolver b c 
     | b == 0 && c == 0 = InfRoots
     | b == 0 = NoRoots
     | otherwise = OneRoot (-c / b)
 
-quadPolySolver :: Float -> Float -> Float -> SqEqAnswer
+quadPolySolver :: Double -> Double -> Double -> SqEqAnswer
 quadPolySolver a b c
     | a == 0 = lineSolver b c
     | otherwise = inner a b c

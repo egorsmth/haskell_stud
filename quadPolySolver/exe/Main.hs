@@ -1,3 +1,8 @@
+import System.Environment (getArgs, getProgName)
+import System.Exit (die)
+import Options.Applicative
+import Control.Applicative ((<**>))
+
 import QuadPoly (quadPolySolver)
 
 isExitCommand c = any (==c) ["exit", "quit", "q"]
@@ -23,5 +28,34 @@ newTest = do
     putStrLn $ show (quadPolySolver 0 0 1)
     putStrLn $ show (quadPolySolver 0 0 0)
 
-main = newTest
+data Options = Options {a, b, c :: Double}
+
+parser :: Parser Options
+parser = Options
+  <$> option auto
+    ( long "arg a"
+    <> short 'a'
+    <> help "fiirst arg a"
+    )
+  <*> option auto
+    ( long "arg b"
+    <> short 'b'
+    <> help "second arg b"
+    )
+  <*> option auto
+    ( long "arg c"
+    <> short 'c'
+    <> help "third arg c")
+
+parserInfo = 
+  info
+    (parser <**> helper)
+    (   fullDesc
+    <>  progDesc "Square root equation solver"
+    <>  header "Hi!")
+
+main = do
+  Options{a = a, b = b, c = c} <- execParser parserInfo
+  putStrLn $ show (quadPolySolver a b c)
+
 
