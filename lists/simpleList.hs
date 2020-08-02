@@ -27,8 +27,6 @@ instance Applicative List where
   (<*>) (Cons f fs) (Cons x xs) =  append (fmap f (Cons x xs)) (fs <*> (Cons x xs))
 
 
-
-
 main = do
    print $ (+) <$> (Cons 2 (Cons 4 HappyEnd)) <*> (Cons 4 (Cons 7 HappyEnd))
    print $ (Cons id (Cons id HappyEnd)) <*> (Cons 4 (Cons 7 HappyEnd))
@@ -37,14 +35,13 @@ main = do
   --Composition pure (.) <*> u <*> v <*> w = u <*> (v <*> w)
    print $ show (pure (.) <*> u <*> v <*> a) ++ " should be " ++ show (u <*> (v <*> a))
   --Homomorphism pure f <*> pure x = pure (f x)
-   --print $ show (pure f <*> pure x) ++ " should be " ++ show (pure (f x))
-   print $ pure (f x)
+   print $ show ((pure f <*> pure x)::List Int) ++ " should be " ++ show ((pure (f x))::List Int)
   --Interchange u <*> pure y = pure ($ y) <*> u
    print $ show (u <*> pure y) ++ " should be " ++ show (pure ($ y) <*> u)
  where
    a = Cons 2 (Cons 4 HappyEnd)
    u = fmap (+) (Cons 7 (Cons 11 HappyEnd))
    v = fmap (+) (Cons 7 (Cons 11 HappyEnd))
-   f = (+ 1)
+   f = (1 + )
    y = 9
    x = 66
