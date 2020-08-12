@@ -11,7 +11,6 @@ spaces :: Parser ()
 spaces = skipMany1 space
 
 
-
 data LispVal = Atom String
              | List [LispVal]
              | DottedList [LispVal] LispVal
@@ -20,6 +19,21 @@ data LispVal = Atom String
              | Bool Bool
              | Character String
              | Float Float
+
+showVal :: LispVal -> String
+showVal (String c) = "\"" ++ c ++ "\""
+showVal (Atom c) = c
+showVal (Number c) = show c
+showVal (Bool False) = "#f"
+showVal (Bool True) = "#t"
+showVal (Float a) = show a
+showVal (Character a) = "#\\" ++ a
+showVal (List x) = "(" ++ (unwords $ map showVal x) ++ ")"
+showVal (DottedList x y) = "(" ++ (unwords $ map showVal x) ++ " . " ++ showVal y ++ ")"
+
+instance Show LispVal where show = showVal
+
+
 
 parseString :: Parser LispVal
 parseString = do
@@ -86,18 +100,37 @@ parseQuoted = do
     return $ List [Atom "quote", x]
 
 
+eval :: LispVal -> LispVal
+eval val@(List [Atom "quote", a]) = a
+eval (List (Atom func : args)) = apply func $ map eval args
+eval a = a
+
+apply :: String -> [LispVal] -> LispVal
+apply func args = maybe (Bool False) ($ args) $ lookup func primitives
+
+primitives :: [(String, [LispVal] -> LispVal)]
+primitives = [("+", numericBinop (+)),
+              ("-", numericBinop (-)),
+              ("*", numericBinop (*)),
+              ("/", numericBinop div),
+              ("mod", numericBinop mod),
+              ("quotient", numericBinop quot),
+              ("remainder", numericBinop rem),
+              ("number?", binop isNumber)]
+
+numericBinop op params = Number $ foldl1 op $ map (\(Number x) -> x) params
+binop op params = Bool $ foldl1 (&&) $ map op params
+isNumber (Number _) = True
+isNumber _ = False
 
 
-readExpr :: String -> String
+readExpr :: String -> LispVal
 readExpr input = case parse parseExpr "lisp" input of
-    Left err -> "No match: " ++ show err
-    Right (Atom a) -> "Found atom: " ++ a
-    Right (String a) -> "Found string: " ++ a
-    Right (Number a) -> "Found number: " ++ show a
-    Right (Float a) -> "Found float: " ++ show a
-    Right (Character a) -> "Found Character: " ++ a
+    Left err -> String $ "No match: " ++ show err
+    Right a -> a
+    
 
 main :: IO ()
 main = do
     (a:_) <- getArgs
-    putStrLn (readExpr a)
+    putStrLn (show $ eval $ readExpr a)
